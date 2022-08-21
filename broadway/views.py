@@ -5,9 +5,13 @@ from rest_framework import viewsets, views, status
 from .models import *
 from .serializers import UserSerializer, HistorySerializer, FeedbackSerializer, TicketSerializer, ShowTimeSerializer, \
     MovieSerializer, SeatSerializer, RoomSerializer, CinemaSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 
 class CinemaView(views.APIView):
+    queryset = Cinema.objects.all()
+    serializer_class = CinemaSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get(self,request,*args,**kwargs):
         cinema = Cinema.objects.all()
@@ -30,6 +34,9 @@ class CinemaView(views.APIView):
 
 
 class UserView(views.APIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         users = User.objects.all()
@@ -51,6 +58,9 @@ class UserView(views.APIView):
 
 
 class MovieView(views.APIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    # permission_classes = (IsAdminOrReadOnly, )
 
     def get(self,request,*args,**kwargs):
         movie = Movie.objects.all()
