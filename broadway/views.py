@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import viewsets, views, status
 from .models import *
 from .serializers import UserSerializer, HistorySerializer, FeedbackSerializer, TicketSerializer, ShowTimeSerializer, \
     MovieSerializer, SeatSerializer, RoomSerializer, CinemaSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+
 
 
 class CinemaView(views.APIView):

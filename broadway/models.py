@@ -1,5 +1,4 @@
 from django.db import models
-from django.db import models
 from django.contrib.auth.models import User
 
 
@@ -9,19 +8,10 @@ class Movie(models.Model):
     description = models.CharField(max_length=500)
     image = models.ImageField()
     creation_date = models.DateTimeField(auto_now_add=True)
-    genre = (
-        ('horror', 'horror'),
-        ('classic', 'classic'),
-        ('fantasy', 'fantasy'),
-        ('detectiv', 'detectiv'),
-        ('drama', 'drama'),
-    )
-    genre = models.CharField(max_length=90, choices=genre)
 
 
-    class Meta:
-        verbose_name = 'Фильм'
-        verbose_name_plural = 'Фильмы'
+    def __str__(self):
+        return self.title
 
 
 class Cinema(models.Model):
@@ -33,6 +23,9 @@ class Cinema(models.Model):
     contact = models.CharField(max_length=100, verbose_name='контакты')
     address = models.CharField(max_length=100, verbose_name='адрес')
 
+    def __str__(self):
+        return self.name
+
 
 class User(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -43,20 +36,21 @@ class User(models.Model):
 
 
 class Room(models.Model):
-
+    name = models.CharField(max_length=30)
     number = models.CharField(max_length=100)
-    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name='комната')
+    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name='cinema')
 
 
 class Seat(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="seat")
     number_seat = models.CharField(max_length=70)
+    row_number = models.PositiveIntegerField(blank=True, null=True)
 
 
 class Ticket(models.Model):
     price = models.IntegerField()
-    seat = models.ForeignKey(Seat, on_delete=models.CASCADE)
-    quantity = models.CharField(max_length=40)
+    seats = models.ForeignKey(Seat, on_delete=models.CASCADE, related_name="seats")
+    start_time = models.DateTimeField()
     payment_methods = (
         ('card', 'card'),
         ('cash', 'cash'),
@@ -71,8 +65,16 @@ class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
     comment = models.CharField(max_length=200)
     creation_date = models.DateTimeField(auto_now_add=True)
+    rate_choices = [
+        (1, "1"),
+        (2, "2"),
+        (3, "3"),
+    ]
+    rate = models.IntegerField(choices=rate_choices)
 
 
 class ShowTime(models.Model):
-    time = models.TimeField()
+
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="showtime")
+    start_time = models.DateTimeField()
