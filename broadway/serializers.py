@@ -12,13 +12,13 @@ class CinemaSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'date_joined', 'is_active']
+        fields = "__all__"
 
 
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ['id', 'name', 'description', 'image', 'creation_date']
+        fields = "__all__"
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -58,3 +58,10 @@ class ShowTimeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class OrderSerializer(serializers.ModelSerializer):
+
+    total_price = serializers.SerializerMethodField()
+
+    class Meta:
+         model = Order
+         fields = "__all__"

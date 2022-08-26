@@ -61,7 +61,7 @@ class History(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
 
 
-class Feedback(models.Model):
+class Feedback(models.Model):   #обратная связь
     user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
     comment = models.CharField(max_length=200)
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -78,3 +78,11 @@ class ShowTime(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="showtime")
     start_time = models.DateTimeField()
+
+
+class Order(models.Model):
+
+    ticket = models.ForeignKey('Ticket', on_delete=models.SET_NULL, null=True, related_name='orders')
+    date_created = models.DateTimeField(auto_now_add=True)
+    quantity = models.PositiveIntegerField()
+    total_price = models.PositiveIntegerField(default=0, null=True)
