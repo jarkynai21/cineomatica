@@ -89,6 +89,9 @@ class ShowTimeViewSet(viewsets.ModelViewSet):
 
 class TicketViewSet(viewsets.ModelViewSet):
 
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+
     def get(self,request):
         ticket = Ticket.objects.all()
         serializer = TicketSerializer(ticket,many=True)
@@ -106,6 +109,10 @@ class HistoryViewSet(viewsets.ModelViewSet):
 
 
 class OrderViewSet(viewsets.ModelViewSet):
+
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
     def get(self,request):
         order = Order.objects.all()
         serializer = OrderSerializer(order,many=True)
