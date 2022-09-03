@@ -74,6 +74,8 @@ class Ticket(models.Model):
     seat = models.OneToOneField(Seat,on_delete=models.SET_NULL, null=True, related_name='ticket')
     showtime = models.ForeignKey(ShowTime, on_delete=models.CASCADE, related_name='showtime')
     start_time = models.DateTimeField()
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, blank=True, null=True, related_name="order")
+    booking = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="booking")
     payment_methods = (
         ('card', 'card'),
         ('cash', 'cash'),
