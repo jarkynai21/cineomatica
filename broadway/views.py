@@ -88,15 +88,30 @@ class TicketView(views.APIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
 
-    def get(self,request,*args,**kwargs):
-        try:
-            ticket = request.user.ticket.all()
-        except:
-            return request
-        ticket = Ticket.objects.get(pk=ticket)
-        if not ticket.booking or ticket.booking == self.user["request"].user:
-            return request
+    def get(self, request):
+        ticket = Ticket.objects.all()
+        serializer = TicketSerializer(ticket, many=True)
+        return Response(serializer.data)
 
+    def post(self, request):
+        user = Ticket.objects.get(seat=["seat"], show_time=["show_time"]).user
+        if request.user == user:
+            Ticket.objects.get_create(seat=["seat"], show_time=["show_time"])
+        elif Ticket.objects.filter(seat=["seat"], show_time=["show_time"]):
+            Ticket.objects.create(seat=["seat"], show_time=["show_time"])
+        else:
+            return Response('Ticket booked!')
+
+
+    def create(self, attrs, *validated_data):
+        user = self.context["request"].user
+        attrs.booking_by = user
+        if validated_data.get("payment_method"):
+            attrs.payment_method = validated_data.get("payment_method", attrs.payment_method)
+            order = Order.objects.create(total_price=attrs.price, user=user)
+            attrs.order = order
+        attrs.save()
+        return attrs
 
 
 class FeedbackView(views.APIView):
