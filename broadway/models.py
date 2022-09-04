@@ -62,11 +62,15 @@ class ShowTime(models.Model):
 
 
 class Order(models.Model):
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     total_sum = models.PositiveIntegerField(default=0, null=True)
     quantity = models.PositiveIntegerField()
     total_price = models.PositiveIntegerField(default=0, null=True)
+    ticket = models.OneToOneField(Ticket,on_delete=models.SET_NULL, null=True, related_name='order')
+
+
 
 
 class Ticket(models.Model):

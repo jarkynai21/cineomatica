@@ -90,8 +90,11 @@ class TicketView(views.APIView):
 
     def get(self, request):
         ticket = Ticket.objects.all()
-        serializer = TicketSerializer(ticket, many=True)
-        return Response(serializer.data)
+        if ticket is not None:
+            ticket = Ticket.filter()
+
+        ticket_serializer = TicketSerializer(ticket, many=True)
+        return Response(ticket_serializer.data)
 
     def post(self, request):
         user = Ticket.objects.get(seat=["seat"], show_time=["show_time"]).user
@@ -105,7 +108,7 @@ class TicketView(views.APIView):
 
     def create(self, attrs, *validated_data):
         user = self.context["request"].user
-        attrs.booking_by = user
+        attrs.booking = user
         if validated_data.get("payment_method"):
             attrs.payment_method = validated_data.get("payment_method", attrs.payment_method)
             order = Order.objects.create(total_price=attrs.price, user=user)
